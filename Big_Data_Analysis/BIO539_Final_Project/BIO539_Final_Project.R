@@ -6,7 +6,13 @@ install.packages("ggplot2")
 library(ggplot2)
 install.packages("tidyverse")
 library(tidyverse)
+install.packages("latexpdf")
+library(latexpdf)
+tinytex::install_tinytex()
 
+Binding_Data_For_R_Project_4 <- read_csv("Big_Data_Analysis/BIO539_Final_Project/Binding_Data_For_R_Project_4.csv")
+ATP_Hydrolysis_Data_for_R_Project_3 <- read_csv("Big_Data_Analysis/BIO539_Final_Project/ATP Hydrolysis Data for R Project 3.csv")
+MqsA_NTD_Degradation_R_Project_2 <- read_csv("Big_Data_Analysis/BIO539_Final_Project/MqsA_NTD_Degradation_R_Project_2.csv")
 
 ggplot(Binding_Data_For_R_Project_4) + 
   geom_bar( aes(ClpX_Mutant,MqsA_1_76_GFP_Retained), stat="identity", fill="skyblue", alpha=0.7) +
@@ -17,7 +23,6 @@ ggplot(Binding_Data_For_R_Project_4) +
 
 Binding_Data_For_R_Project_4 %>%
   summary(MqsA_1_76_GFP_Retained)
-#Provides the mean binding amongst all ClpX mutants
 
 ggplot(ATP_Hydrolysis_Data_for_R_Project_3) + 
   geom_bar( aes(ClpX_Mutant,Avg_Hydrolysis), stat="identity", fill="skyblue", alpha=0.7) +
@@ -28,18 +33,6 @@ ggplot(ATP_Hydrolysis_Data_for_R_Project_3) +
 
 ATP_Hydrolysis_Data_for_R_Project_3 %>%
   summary(Avg_Hydrolysis)
-#Provides the mean hydrolysis for all mutants
-
-ATP_vs_Binding <- left_join(ATP_Hydrolysis_Data_for_R_Project_3, Binding_Data_For_R_Project_4,
-                            by = c("ClpX_Mutant","ClpX_Mutant"))
-
-ggplot(ATP_vs_Binding) + 
-  geom_point( aes(MqsA_1_76_GFP_Retained,Avg_Hydrolysis, color = ClpX_Mutant)) +
-  theme_bw() + 
-  labs(title = "How ClpX N-terminal Mutant ATP Hydrolysis Effects Binding of MqsA 1-76" , 
-       x = "GFP-MqsA 1-76 Retained (A.U.)" , y = "ATP Hydrolysis (nmol Pi)", color = " ") +
-  theme(legend.position = "right")
-
 
 ggplot(MqsA_NTD_Degradation_R_Project_2) + 
   geom_bar( aes(ClpX_Mutant,MqsA_NTD_Degradation), stat="identity", fill="skyblue", alpha=0.7) +
@@ -50,7 +43,17 @@ ggplot(MqsA_NTD_Degradation_R_Project_2) +
 
 MqsA_NTD_Degradation_R_Project_2 %>%
   summary(MqsA_NTD_Degradation)
-#Provides mean MqsA degradation rate for all mutants
+
+
+ATP_vs_Binding <- left_join(ATP_Hydrolysis_Data_for_R_Project_3, Binding_Data_For_R_Project_4,
+                            by = c("ClpX_Mutant","ClpX_Mutant"))
+
+ggplot(ATP_vs_Binding) + 
+  geom_point( aes(MqsA_1_76_GFP_Retained,Avg_Hydrolysis, color = ClpX_Mutant)) +
+  theme_bw() + 
+  labs(title = "How ClpX N-terminal Mutant ATP Hydrolysis Effects Binding of MqsA 1-76" , 
+       x = "GFP-MqsA 1-76 Retained (A.U.)" , y = "ATP Hydrolysis (nmol Pi)", color = " ") +
+  theme(legend.position = "right")
 
 Degradation_vs_Binding <- left_join(MqsA_NTD_Degradation_R_Project_2, Binding_Data_For_R_Project_4,
                             by = c("ClpX_Mutant","ClpX_Mutant"))
@@ -72,7 +75,4 @@ ggplot(Degradation_vs_Hydrolysis) +
        x = "ATP Hydrolysis (nmol Pi)" , y = "Percent Substrate Remaining", color = " ") +
   theme(legend.position = "right")
 
-  
-install.packages("latexpdf")
-library(latexpdf)
-tinytex::install_tinytex()
+
